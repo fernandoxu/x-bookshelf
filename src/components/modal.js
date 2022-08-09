@@ -27,6 +27,7 @@ const ModalDismissButton = ({ children: child }) => {
 
 const ModalOpenButton = ({ children: child }) => {
   const [, setIsOpen] = useContext(ModalContext);
+  
   return cloneElement(child, {
     onClick: callAll(() => setIsOpen(true), child.props.onClick),
   });
