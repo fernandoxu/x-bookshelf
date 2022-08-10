@@ -1,5 +1,6 @@
 import styled from '@emotion/styled/macro';
 import { keyframes } from '@emotion/react';
+import { Link as RouterLink } from 'react-router-dom';
 import { Dialog as ReachDialog } from '@reach/dialog';
 import { FaSpinner } from 'react-icons/fa';
 
@@ -15,6 +16,14 @@ const Spinner = styled(FaSpinner)({
   animation: `${spin} 1s linear infinite`,
 });
 Spinner.defaultProps = { 'aria-label': 'Loading' };
+
+const BookListUL = styled.ul({
+  listStyle: 'none',
+  padding: '0',
+  display: 'grid',
+  gridTemplateRows: 'repeat(auto-fill, minmax(100px, 1fr))',
+  gridGap: '1em',
+});
 
 const buttonVariants = {
   primary: {
@@ -37,12 +46,14 @@ const Button = styled.button(
   ({ variant = 'primary' }) => buttonVariants[variant]
 );
 
-const Input = styled.input({
-  borderRadius: '3px',
+const inputStyles = {
   border: `1px solid ${colors.gray10}`,
   background: colors.gray,
   padding: '8px 12px',
-});
+};
+
+const Input = styled.input({ borderRadius: '3px' }, inputStyles);
+const Textarea = styled.textarea(inputStyles);
 
 const CircleButton = styled.button({
   borderRadius: '30px',
@@ -75,4 +86,80 @@ const FormGroup = styled.div({
   flexDirection: 'column',
 });
 
-export { Button, Input, CircleButton, Dialog, FormGroup, Spinner };
+const FullPageSpinner = (
+  <div
+    css={{
+      fontSize: '4em',
+      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+  >
+    <Spinner />
+  </div>
+);
+
+const Link = styled(RouterLink)({
+  color: colors.indigo,
+  ':hover': {
+    color: colors.indigoDarken10,
+    textDecoration: 'underline',
+  },
+});
+
+const errorMessageVariants = {
+  stacked: { display: 'block' },
+  inline: { display: 'inline-block' },
+};
+
+const ErrorMessage = ({ error, variant = 'stacked', ...props }) => (
+  <div
+    role='alert'
+    css={[{ color: colors.danger }, errorMessageVariants[variant]]}
+    {...props}
+  >
+    <span>There was an error:</span>
+    <pre
+      css={[
+        { whiteSpace: 'break-spaces', margin: '0', marginBottom: '-5' },
+        errorMessageVariants[variant],
+      ]}
+    >
+      {error.message}
+    </pre>
+  </div>
+);
+
+const FullPageErrorFallback = ({ error }) => (
+  <div
+    role='alert'
+    css={{
+      color: colors.danger,
+      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+  >
+    <p>Uh oh... There's a problem. Try refreshing the app.</p>
+    <pre>{error.message}</pre>
+  </div>
+);
+
+export {
+  Button,
+  Input,
+  CircleButton,
+  Dialog,
+  FormGroup,
+  Spinner,
+  BookListUL,
+  Textarea,
+  Link,
+  FullPageSpinner,
+  ErrorMessage,
+  FullPageErrorFallback,
+};
