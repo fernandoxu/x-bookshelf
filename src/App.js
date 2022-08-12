@@ -1,17 +1,9 @@
 /** @jsxImportSource @emotion/react */
 
-import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap-reboot.css';
-import { Dialog } from '@reach/dialog';
 import '@reach/dialog/styles.css';
 
-import {
-  Button,
-  Input,
-  CircleButton,
-  FormGroup,
-  Spinner,
-} from './components/lib';
+import { Button, Input, FormGroup, Spinner } from './components/lib';
 import { Modal, ModalContents, ModalOpenButton } from './components/modal';
 import { Logo } from './components/logo';
 import { cloneElement } from 'react';

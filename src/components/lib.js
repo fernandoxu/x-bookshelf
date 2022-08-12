@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Dialog as ReachDialog } from '@reach/dialog';
 import { FaSpinner } from 'react-icons/fa';
 
-import * as colors from '../styles/color';
+import * as colors from '../styles/colors';
 import * as mq from '../styles/media-queries';
 
 const spin = keyframes({
