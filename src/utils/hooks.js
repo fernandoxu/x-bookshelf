@@ -1,56 +1,51 @@
-import { useReducer } from 'react';
-import { useCallback, useLayoutEffect, useRef } from 'react';
+import * as React from 'react';
 
-const useSafeDispatch = (dispatch) => {
-  const mounted = useRef(false);
-
-  useLayoutEffect(() => {
+function useSafeDispatch(dispatch) {
+  const mounted = React.useRef(false);
+  React.useLayoutEffect(() => {
     mounted.current = true;
-
-    return () => {
-      mounted.current = false;
-    };
-  });
-
-  return useCallback(
+    return () => (mounted.current = false);
+  }, []);
+  return React.useCallback(
     (...args) => (mounted.current ? dispatch(...args) : void 0),
     [dispatch]
   );
-};
+}
 
+// Example usage:
+// const {data, error, status, run} = useAsync()
+// React.useEffect(() => {
+//   run(fetchPokemon(pokemonName))
+// }, [pokemonName, run])
 const defaultInitialState = { status: 'idle', data: null, error: null };
-
-const useAsync = (initialState) => {
-  const initialStateRef = useRef({
+function useAsync(initialState) {
+  const initialStateRef = React.useRef({
     ...defaultInitialState,
     ...initialState,
   });
-
-  const [{ status, data, error }, setState] = useReducer(
-    (state, action) => ({ ...state, ...action }),
+  const [{ status, data, error }, setState] = React.useReducer(
+    (s, a) => ({ ...s, ...a }),
     initialStateRef.current
   );
 
   const safeSetState = useSafeDispatch(setState);
 
-  const setData = useCallback(
+  const setData = React.useCallback(
     (data) => safeSetState({ data, status: 'resolved' }),
     [safeSetState]
   );
-
-  const setError = useCallback(
+  const setError = React.useCallback(
     (error) => safeSetState({ error, status: 'rejected' }),
     [safeSetState]
   );
-
-  const reset = useCallback(
+  const reset = React.useCallback(
     () => safeSetState(initialStateRef.current),
     [safeSetState]
   );
 
-  const run = useCallback(
+  const run = React.useCallback(
     (promise) => {
-      if (!promise?.then) {
+      if (!promise || !promise.then) {
         throw new Error(
           `The argument passed to useAsync().run must be a promise. Maybe a function that's passed isn't returning anything?`
         );
@@ -71,6 +66,7 @@ const useAsync = (initialState) => {
   );
 
   return {
+    // using the same names that react-query uses for convenience
     isIdle: status === 'idle',
     isLoading: status === 'pending',
     isError: status === 'rejected',
@@ -84,6 +80,6 @@ const useAsync = (initialState) => {
     run,
     reset,
   };
-};
+}
 
 export { useAsync };

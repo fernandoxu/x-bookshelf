@@ -19,6 +19,7 @@ const DiscoverBooksScreen = () => {
 
   useEffect(() => {
     if (!queried) return;
+
     run(client(`books?query=${encodeURIComponent(query)}`));
   }, [queried, query, run]);
 
